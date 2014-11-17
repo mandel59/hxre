@@ -3,7 +3,7 @@ package hxre;
 import hxre.Types;
 
 class Compiler implements Program {
-	public var ncap (default, null) : Index<Index<Char>>;
+	public var ncap (default, null) : Index<Null<Index<Char>>>;
 	public var nturnstile (default, null) : Index<Bool>;
 	public var insts (default, null) : Array<Inst>;
 	public var names (default, null) : Map<String, Index<Index<Char>>>;

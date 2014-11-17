@@ -8,17 +8,19 @@ class NfaVM {
 	var w : Window;
 	var cts : Array<Thread>;
 	var nts : Array<Thread>;
+	var ncap : Index<Option<Index<Char>>>;
 	var turnstile : Array<Bool>;
 	var matchedThread : Option<Thread>;
 
 	public function new(prog : Null<Program>) {
 		this.prog = prog;
 		if (prog != null) {
+			ncap = prog.ncap;
 			turnstile = [for (i in 0 ... prog.nturnstile) false];
 		}
 	}
 
-	public function exec(w : Window) {
+	public function exec(w : Window) : Option<Array<Option<Range<Index<Char>>>>> {
 		this.w = w;
 		cts = [];
 		nts = [];
@@ -27,7 +29,7 @@ class NfaVM {
 
 		while (true) {
 			if (matchedThread == None) {
-				cts.push(new Thread(0, [w.index], []));
+				cts.push(new Thread(0, [w.index], [], ncap));
 			}
 
 			if (cts.length == 0) {
@@ -46,7 +48,22 @@ class NfaVM {
 
 			advance();
 		}
-		return matchedThread != None;
+		return getMatch();
+	}
+
+	function getMatch() : Option<Array<Option<Range<Index<Char>>>>> {
+		switch (matchedThread) {
+			case None:
+				return None;
+			case Some(t):
+				return Some([for (i in 0 ... ncap)
+					switch [t.savedbegin[i], t.savedend[i]] {
+						case [null, _], [_, null]:
+							None;
+						case [b, e]:
+							Some({begin: b, end: e});
+					}]);
+		}
 	}
 
 	function clearTurnstiles() {

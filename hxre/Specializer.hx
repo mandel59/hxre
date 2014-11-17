@@ -43,6 +43,7 @@ class Specializer {
 				ret: null,
 				expr: macro {
 					super(null);
+					ncap = $v{prog.ncap};
 					turnstile = [for (i in 0 ... $v{prog.nturnstile}) false];
 				}
 			}),
@@ -160,6 +161,7 @@ class Specializer {
 			return i;
 		}
 		return macro {
+			var curr = w.curr;
 			!w.terminal() && ${
 				mOr([
 					for(range in ranges)
