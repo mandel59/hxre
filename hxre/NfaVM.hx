@@ -30,7 +30,7 @@ class NfaVM {
 
 	public function new(prog : Program) {
 		this.prog = prog;
-		turnstile = [for (_ in 0 ... prog.nturnstile) false];
+		turnstile = [for (i in 0 ... prog.nturnstile) false];
 	}
 
 	public function exec(w : Window) {
