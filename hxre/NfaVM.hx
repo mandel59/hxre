@@ -90,6 +90,8 @@ class NfaVM {
 					assert(oneChar(c));
 				case CharClass(ranges):
 					assert(charClass(ranges));
+				case NegCharClass(ranges):
+					assert(negCharClass(ranges));
 				case Begin:
 					assert(begin());
 				case End:
@@ -121,6 +123,10 @@ class NfaVM {
 			}
 		}
 		return false;
+	}
+
+	inline function negCharClass(ranges) {
+		return !charClass(ranges);
 	}
 
 	inline function begin() : Bool {

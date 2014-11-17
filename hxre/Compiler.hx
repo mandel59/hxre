@@ -49,8 +49,12 @@ class Compiler implements Program {
 			case Literal(c):
 				insts.push(OneChar(c));
 				insts.push(AddThread);
-			case AstClass(ranges):
-				insts.push(CharClass(ranges));
+			case AstClass(ranges, negated):
+				if (!negated) {
+					insts.push(CharClass(ranges));
+				} else {
+					insts.push(NegCharClass(ranges));
+				}
 				insts.push(AddThread);
 			case Begin:
 				insts.push(Begin);

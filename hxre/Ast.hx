@@ -6,7 +6,7 @@ import hxre.Types;
 enum Ast {
 	Dot;
 	Literal(c : Char);
-	AstClass(ranges : Array<Range<Char>>);
+	AstClass(ranges : Array<Range<Char>>, negated : Bool);
 
 	Begin;
 	End;

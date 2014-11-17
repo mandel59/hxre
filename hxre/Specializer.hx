@@ -130,6 +130,8 @@ class Specializer {
 				return mAssert(mOneChar(c));
 			case CharClass(ranges):
 				return mAssert(mCharClass(ranges));
+			case NegCharClass(ranges):
+				return mAssert(mNegCharClass(ranges));
 			case Begin:
 				return mAssert(mBegin());
 			case End:
@@ -165,6 +167,10 @@ class Specializer {
 				])
 			};
 		};
+	}
+
+	static function mNegCharClass(ranges) {
+		return macro !${mCharClass(ranges)};
 	}
 
 	static function mBegin() {

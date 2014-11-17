@@ -12,6 +12,7 @@ enum Inst {
 
 	OneChar(c : Char);
 	CharClass(ranges : Array<Range<Char>>);
+	NegCharClass(ranges : Array<Range<Char>>);
 	Begin;
 	End;
 }
