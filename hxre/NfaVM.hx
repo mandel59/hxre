@@ -2,35 +2,20 @@ package hxre;
 
 import haxe.ds.Option;
 import hxre.Types;
-import hxre.Inst;
-
-private class Thread {
-	public var pc : Index<Inst>; // program counter
-	public var savedbegin : Array<Index<Char>>; // saved capture begins
-	public var savedend : Array<Index<Char>>; // saved end capture ends
-
-	public function new(pc, sb, se) {
-		this.pc = pc;
-		this.savedbegin = sb;
-		this.savedend = se;
-	}
-
-	public function copy() : Thread {
-		return new Thread(pc, savedbegin.copy(), savedend.copy());
-	}
-}
 
 class NfaVM {
-	var prog : Program;
+	var prog : Null<Program>;
 	var w : Window;
 	var cts : Array<Thread>;
 	var nts : Array<Thread>;
 	var turnstile : Array<Bool>;
 	var matchedThread : Option<Thread>;
 
-	public function new(prog : Program) {
+	public function new(prog : Null<Program>) {
 		this.prog = prog;
-		turnstile = [for (i in 0 ... prog.nturnstile) false];
+		if (prog != null) {
+			turnstile = [for (i in 0 ... prog.nturnstile) false];
+		}
 	}
 
 	public function exec(w : Window) {
