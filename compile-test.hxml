@@ -1,0 +1,49 @@
+-main hxre.test.Main
+--interp
+
+--next
+
+-main hxre.test.Main
+-neko test/test.n
+-cmd neko test/test.n
+
+--next
+
+-main hxre.test.Main
+-php test/test_php
+-cmd php test/test_php/index.php
+
+--next
+
+-main hxre.test.Main
+-js test/test.js
+-cmd node test/test.js
+
+--next
+
+-main hxre.test.Main
+-swf test/test.swf
+
+--next
+
+-main hxre.test.Main
+-java test/test_java
+-cmd java -jar test/test_java/Main.jar
+
+--next
+
+-main hxre.test.Main
+-cpp test/test_cpp
+-cmd test/test_cpp/Main
+
+--next
+
+-main hxre.test.Main
+-cs test/test_cs
+-cmd mono test/test_cs/bin/Main.exe
+
+--next
+
+-main hxre.test.Main
+-python test/test.py
+-cmd python3 test/test.py
