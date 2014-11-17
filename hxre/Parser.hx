@@ -114,42 +114,58 @@ class Parser {
 		return i;
 	}
 
+	function parseRepeater() {
+		if (index == chars.length) {
+			return;
+		}
+		switch (chars[index]) {
+			case '?'.code:
+				index++;
+				addRepeater(ZeroOne);
+			case '*'.code:
+				index++;
+				addRepeater(ZeroMore);
+			case '+'.code:
+				index++;
+			case '{'.code:
+				index++;
+				var n = parseInt();
+				switch (chars[index++]) {
+					case ','.code:
+						if (chars[index] == '}'.code) {
+							index++;
+							addRepeater(NMore(n));
+						} else {
+							var m = parseInt();
+							if (chars[index] != '}'.code) {
+								throw new ParseError(index, "");
+							}
+							if (n > m) {
+								throw new ParseError(index, "");
+							}
+							index++;
+							addRepeater(NRange(n, m));
+						}
+					case '}'.code:
+						addRepeater(NRange(n, n));
+					default:
+						throw new ParseError(index - 1, "");
+				}
+			default:
+		}
+	}
+
 	function parseRegex() {
 		while (index < chars.length) {
 			switch (chars[index++]) {
-				case '?'.code:
-					addRepeater(ZeroOne);
-				case '*'.code:
-					addRepeater(ZeroMore);
-				case '+'.code:
-					addRepeater(OneMore);
+				case '?'.code, '*'.code,  '+'.code, '{'.code:
+					throw new ParseError(index - 1, "");
 				case '\\'.code:
 					cats.push(parseEscape());
-				case '{'.code:
-					var n = parseInt();
-					switch (chars[index++]) {
-						case ','.code:
-							if (chars[index] == '}'.code) {
-								index++;
-								addRepeater(NMore(n));
-							} else {
-								var m = parseInt();
-								if (chars[index] != '}'.code) {
-									throw new ParseError(index, "");
-								}
-								if (n > m) {
-									throw new ParseError(index, "");
-								}
-								index++;
-								addRepeater(NRange(n, m));
-							}
-						case '}'.code:
-							addRepeater(NRange(n, n));
-						default:
-							throw new ParseError(index - 1, "");
-					}
+					parseRepeater();
 				case '['.code:
 					parseCharClass();
+					parseRepeater();
 				case '('.code:
 					if (index == chars.length) {
 						throw new ParseError(index, "");
@@ -178,17 +194,20 @@ class Parser {
 						case CaptureGroup(n):
 							cats.push(Cap(c, n));
 					}
+					parseRepeater();
 				case '|'.code:
 					alts.unshift(concat());
 					cats = [];
 				case '.'.code:
 					cats.push(Dot);
+					parseRepeater();
 				case '^'.code:
 					cats.push(Begin);
 				case '$'.code:
 					cats.push(End);
 				case c:
 					cats.push(Literal(c));
+					parseRepeater();
 			}
 		}
 		if (stack.length != 0) {
