@@ -163,7 +163,7 @@ class Specializer {
 			!w.terminal() && ${
 				mOr([
 					for(range in ranges)
-						macro $v{range.begin} <= curr && curr <= $v{range.end}
+						macro $v{range.begin} <= curr && curr < $v{range.end}
 				])
 			};
 		};

@@ -74,9 +74,9 @@ class Parser {
 			case '\\'.code:
 				return Literal('\\'.code);
 			case 'd'.code:
-				return AstClass([{begin: '0'.code, end: '9'.code}], false);
+				return AstClass([{begin: '0'.code, end: '9'.code + 1}], false);
 			case 'D'.code:
-				return AstClass([{begin: '0'.code, end: '9'.code}], true);
+				return AstClass([{begin: '0'.code, end: '9'.code + 1}], true);
 			default:
 				throw "TODO: implement other escapes";
 		}

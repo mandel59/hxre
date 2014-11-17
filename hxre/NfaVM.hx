@@ -118,7 +118,7 @@ class NfaVM {
 		var curr = w.curr;
 		// FIXME: inefficient linear search
 		for (range in ranges) {
-			if (range.begin <= curr && curr <= range.end) {
+			if (range.begin <= curr && curr < range.end) {
 				return true;
 			}
 		}
