@@ -11,6 +11,27 @@ class Specializer {
 		var prog = Compiler.compile(ast);
 		var nturnstile = prog.nturnstile;
 
+		var lc = Context.getLocalClass().get();
+
+		if (!lc.isPrivate) {
+			var typepath = {
+				pack: lc.module.split(".").slice(0, -1),
+				name: lc.name,
+				sub: null,
+				params: []
+			};
+
+			var fieldRegex = {
+				name: "regex",
+				doc: null,
+				meta: [],
+				access: [APublic, AStatic],
+				kind: FProp("default", "null", macro : hxre.Regex, macro new $typepath()),
+				pos: Context.currentPos()
+			}
+			fields.push(fieldRegex);
+		}
+
 		var fieldNew = {
 			name: "new",
 			doc: null,
@@ -27,6 +48,7 @@ class Specializer {
 			}),
 			pos: Context.currentPos()
 		};
+		fields.push(fieldNew);
 
 		var fieldRun = {
 			name: "run",
@@ -41,8 +63,8 @@ class Specializer {
 			}),
 			pos: Context.currentPos()
 		};
-		fields.push(fieldNew);
 		fields.push(fieldRun);
+
 		return fields;
 	}
 

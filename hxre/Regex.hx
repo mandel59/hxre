@@ -1,6 +1,6 @@
 package hxre;
 
-abstract Regex(NfaVM) {
+abstract Regex(NfaVM) from NfaVM {
 	public function new(s : String) {
 		var ast = Parser.parse(s);
 		var prog = Compiler.compile(ast);

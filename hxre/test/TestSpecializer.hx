@@ -11,17 +11,17 @@ private class RegEx3 extends hxre.NfaVM {}
 
 class TestSpecializer extends haxe.unit.TestCase {
 	public function testSpecializer1() {
-		var re = new RegEx1();
-		assertTrue(re.exec(new StringWindow("abc")));
+		var re : hxre.Regex = new RegEx1();
+		assertTrue(re.test("abc"));
 	}
 
 	public function testSpecializer2() {
-		var re = new RegEx2();
-		assertTrue(re.exec(new StringWindow("abc")));
+		var re : hxre.Regex = new RegEx2();
+		assertTrue(re.test("abc"));
 	}
 
 	public function testSpecializer3() {
-		var re = new RegEx3();
-		assertTrue(re.exec(new StringWindow("abc")));
+		var re : hxre.Regex = new RegEx3();
+		assertTrue(re.test("abc"));
 	}
 }
