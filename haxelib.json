@@ -1,0 +1,11 @@
+{
+    "name": "hxre",
+    "url": "https://github.com/mandel59/hxre",
+    "license": "MIT",
+    "tags": ["cross", "regular expression", "string"],
+    "description": "Regular Expression",
+    "version": "0.1.0",
+    "releasenote": "initial commit",
+    "contributors": ["mandel59"],
+    "dependencies": {}
+}
