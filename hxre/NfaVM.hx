@@ -112,13 +112,13 @@ class NfaVM {
 	}
 
 	function charClass(ranges : Array<Range<Char>>) : Bool {
-		if (!w.terminal()) {
+		if (w.terminal()) {
 			return false;
 		}
 		var curr = w.curr;
 		// FIXME: inefficient linear search
 		for (range in ranges) {
-			if (range.begin <= curr && curr < range.end) {
+			if (range.begin <= curr && curr <= range.end) {
 				return true;
 			}
 		}
