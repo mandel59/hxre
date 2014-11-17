@@ -1,3 +1,3 @@
 # HxRE
 
-Yet another Haxe library for regular expression engine.
+Haxe library for regular expression engine.
