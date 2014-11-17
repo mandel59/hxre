@@ -4,7 +4,7 @@ import haxe.ds.Option;
 import hxre.Types;
 import hxre.Ast;
 
-enum Paren {
+private enum Paren {
 	NonCaptureGroup;
 	CaptureGroup(name : Option<String>);
 }
