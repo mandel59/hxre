@@ -21,7 +21,7 @@ class Main {
         // static compiled regex
         trace(SpecialRegex.regex.exec("Date: 2014-11-30"));
 
-        // static regex is also able to create a new instance
+        // static regex is also able to create new instances
         var sre : hxre.Regex = new SpecialRegex();
         trace(sre.exec("2014-12-31T12:00Z"));
     }
