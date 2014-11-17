@@ -160,7 +160,10 @@ class Specializer {
 	}
 
 	static function mJump(x : Index<Inst>) {
-		return macro t.pc = $v{x};
+		return macro {
+			t.pc = $v{x};
+			return run(t);
+		};
 	}
 
 	static function mSplit(x : Index<Inst>, y : Index<Inst>) {
@@ -171,6 +174,7 @@ class Specializer {
 				return true;
 			}
 			t.pc = $v{y};
+			return run(t);
 		};
 	}
 
