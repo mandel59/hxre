@@ -1,14 +1,15 @@
 package hxre;
 
 abstract Regex(NfaVM) from NfaVM {
-	public function new(s : String) {
+	public function new(s : String, ?opt : String) {
 		var ast = Parser.parse(s);
+		var flags = Parser.parseFlags(opt);
 		var prog = Compiler.compile(ast);
-		this = new NfaVM(prog);
+		this = new NfaVM(prog, flags);
 	}
 
 	public function test(s : String) {
-		return this.exec(new StringWindow(s)) != None;
+		return this.match(new StringWindow(s));
 	}
 
 	public function exec(s : String) {

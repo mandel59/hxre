@@ -19,11 +19,17 @@ interface Program {
 }
 
 interface Window {
-	var index (default, null) : Index<Char>;
+	var index : Index<Char>;
 	var prev (default, null) : Option<Char>;
 	var curr (get, null) : Char;
 
 	function terminal() : Bool;
 
 	function advance() : Void;
+}
+
+typedef Flags = {
+	var ignoreCase : Bool;
+	var multiline : Bool;
+	var global : Bool;
 }

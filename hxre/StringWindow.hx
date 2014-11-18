@@ -4,7 +4,7 @@ import haxe.ds.Option;
 import hxre.Types;
 
 class StringWindow implements Window {
-	public var index (default, null) : Index<Char>;
+	public var index : Index<Char>;
 	public var prev (default, null) : Option<Char>;
 	public var curr (get, null) : Char;
 	var str : String;

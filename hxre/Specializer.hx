@@ -5,11 +5,18 @@ import haxe.macro.Expr;
 import hxre.Types;
 
 class Specializer {
-	macro public static function build(s : String) : Array<Field> {
+	macro public static function build(s : String, ?flags : Flags) : Array<Field> {
 		var fields = Context.getBuildFields();
 		var ast = Parser.parse(s);
 		var prog = Compiler.compile(ast);
 		var nturnstile = prog.nturnstile;
+		if (flags == null) {
+			flags = {
+				ignoreCase: false,
+				multiline: false,
+				global: false,
+			};
+		}
 
 		var lc = Context.getLocalClass().get();
 
@@ -42,7 +49,7 @@ class Specializer {
 				args: [],
 				ret: null,
 				expr: macro {
-					super(null);
+					super(null, $v{flags});
 					ncap = $v{prog.ncap};
 					turnstile = [for (i in 0 ... $v{prog.nturnstile}) false];
 				}
@@ -60,7 +67,7 @@ class Specializer {
 				params: null,
 				args: [{name: "t", type: macro : hxre.Thread, opt: null, value: null}],
 				ret: null,
-				expr: assemble(prog.insts)
+				expr: new Specializer(prog, flags).assemble()
 			}),
 			pos: Context.currentPos()
 		};
@@ -69,7 +76,16 @@ class Specializer {
 		return fields;
 	}
 
-	static function assemble(insts : Array<Inst>) {
+	var prog : Program;
+	var flags : Flags;
+
+	function new(prog : Program, flags : Flags) {
+		this.prog = prog;
+		this.flags = flags;
+	}
+
+	function assemble() {
+		var insts = prog.insts;
 		var l = new Map();
 		for (i in 0 ... insts.length) {
 			switch (insts[i]) {
@@ -97,6 +113,9 @@ class Specializer {
 			}
 		}
 		s.push(macro t.savedend[0] = w.index);
+		if (flags.global) {
+			s.push(macro lastIndex = w.index);
+		}
 		s.push(macro matchedThread = haxe.ds.Option.Some(t));
 		s.push(macro return true);
 		ss.set(b, s);
@@ -113,7 +132,7 @@ class Specializer {
 		return sw;
 	}
 
-	static function mInst(i : Index<Inst>, inst : Inst) {
+	function mInst(i : Index<Inst>, inst : Inst) {
 		switch (inst) {
 			case AddThread:
 				return mAddThread(i);
@@ -140,7 +159,7 @@ class Specializer {
 		}
 	}
 
-	static function mAddThread(i) {
+	function mAddThread(i) {
 		return macro {
 			t.pc = $v{i + 1}
 			nts.push(t);
@@ -148,11 +167,11 @@ class Specializer {
 		};
 	}
 
-	static function mOneChar(c : Char) {
+	function mOneChar(c : Char) {
 		return macro !w.terminal() && w.curr == $v{c};
 	}
 
-	static function mCharClass(ranges : Array<Range<Char>>) {
+	function mCharClass(ranges : Array<Range<Char>>) {
 		function mOr(es : Iterable<Expr>) {
 			var i = macro false;
 			for (e in es) {
@@ -171,32 +190,32 @@ class Specializer {
 		};
 	}
 
-	static function mNegCharClass(ranges) {
+	function mNegCharClass(ranges) {
 		return macro !${mCharClass(ranges)};
 	}
 
-	static function mBegin() {
+	function mBegin() {
 		return macro w.prev == None;
 	}
 
-	static function mEnd() {
+	function mEnd() {
 		return macro w.terminal();
 	}
 
-	static function mAssert(prop) {
+	function mAssert(prop) {
 		return macro if (!${prop}) {
 			return false;
 		};
 	}
 
-	static function mJump(x : Index<Inst>) {
+	function mJump(x : Index<Inst>) {
 		return macro {
 			t.pc = $v{x};
 			return run(t);
 		};
 	}
 
-	static function mSplit(x : Index<Inst>, y : Index<Inst>) {
+	function mSplit(x : Index<Inst>, y : Index<Inst>) {
 		return macro {
 			var t1 = t.copy();
 			t1.pc = $v{x};
@@ -208,7 +227,7 @@ class Specializer {
 		};
 	}
 
-	static function mPassTurnstile(i : Index<Bool>) {
+	function mPassTurnstile(i : Index<Bool>) {
 		return macro {
 			if (turnstile[$v{i}]) {
 				return false;
@@ -217,11 +236,11 @@ class Specializer {
 		};
 	}
 
-	static function mSaveBegin(i : Index<Index<Char>>) {
+	function mSaveBegin(i : Index<Index<Char>>) {
 		return macro t.savedbegin[$v{i}] = w.index;
 	}
 
-	static function mSaveEnd(i : Index<Index<Char>>) {
+	function mSaveEnd(i : Index<Index<Char>>) {
 		return macro t.savedend[$v{i}] = w.index;
 	}
 }

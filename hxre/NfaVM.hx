@@ -4,6 +4,12 @@ import haxe.ds.Option;
 import hxre.Types;
 
 class NfaVM {
+	public var ignoreCase (default, null) : Bool = false;
+	public var multiline (default, null) : Bool = false;
+	public var global (default, null) : Bool = false;
+
+	public var lastIndex (default, null) : Int = 0;
+
 	var prog : Null<Program>;
 	var w : Window;
 	var cts : Array<Thread>;
@@ -12,16 +18,22 @@ class NfaVM {
 	var turnstile : Array<Bool>;
 	var matchedThread : Option<Thread>;
 
-	public function new(prog : Null<Program>) {
+	public function new(prog : Null<Program>, flags : Flags) {
 		this.prog = prog;
 		if (prog != null) {
 			ncap = prog.ncap;
 			turnstile = [for (i in 0 ... prog.nturnstile) false];
 		}
+		ignoreCase = flags.ignoreCase;
+		multiline = flags.multiline;
+		global = flags.global;
 	}
 
-	public function exec(w : Window) : Option<Array<Option<Range<Index<Char>>>>> {
+	public function match(w : Window) : Bool {
 		this.w = w;
+		if (global) {
+			w.index = lastIndex;
+		}
 		cts = [];
 		nts = [];
 		clearTurnstiles();
@@ -48,6 +60,11 @@ class NfaVM {
 
 			advance();
 		}
+		return matchedThread != None;
+	}
+
+	public function exec(w : Window) : Option<Array<Option<Range<Index<Char>>>>> {
+		match(w);
 		return getMatch();
 	}
 
@@ -87,6 +104,9 @@ class NfaVM {
 		while (true) {
 			if (t.pc == prog.insts.length) {
 				t.savedend[0] = w.index;
+				if (global) {
+					lastIndex = w.index;
+				}
 				matchedThread = Some(t);
 				return true;
 			}

@@ -34,6 +34,31 @@ class Parser {
 		return p.parseRegex();
 	}
 
+	public static function parseFlags(s : Null<String>) : Flags {
+		var i = 0;
+		var flags = {
+			ignoreCase : false,
+			multiline : false,
+			global : false,
+		};
+		if (s == null) {
+			return flags;
+		}
+		for (i in 0 ... s.length) {
+			var c = s.charCodeAt(i);
+			switch (c) {
+				case 'i'.code:
+					flags.ignoreCase = true;
+				case 'g'.code:
+					flags.global = true;
+				case 'm'.code:
+					flags.multiline = true;
+				default:
+			}
+		}
+		return flags;
+	}
+
 	function new(s : String) {
 		source = s;
 		chars = [for (i in 0 ... s.length) s.charCodeAt(i)]; // FIXME: support unicode string

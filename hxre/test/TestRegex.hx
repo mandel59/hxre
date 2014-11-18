@@ -19,4 +19,17 @@ class TestRegex extends haxe.unit.TestCase {
 		assertTrue(new Regex("^\\d{10}$").test("0123456789"));
 		assertFalse(new Regex("\\D").test("0123456789"));
 	}
+
+	public function testGlobal() {
+		var re = new Regex(".", "g");
+		var s = "012";
+		var m = re.exec(s);
+		assertEquals("0", m[0]);
+		m = re.exec(s);
+		assertEquals("1", m[0]);
+		m = re.exec(s);
+		assertEquals("2", m[0]);
+		m = re.exec(s);
+		assertEquals(null, m);
+	}
 }
