@@ -38,7 +38,6 @@ class Bench {
 	}
 
 	macro function benchmark(_this : Expr, e : Expr) {
-		trace(e);
 		return macro {
 			var t1 = haxe.Timer.stamp();
 			for (i in 0 ... n){
