@@ -9,7 +9,7 @@ class Bench {
 	var n : Int;
 
 	public function new() {
-		n = 1000;
+		n = 200;
 	}
 
 	public function run() {
@@ -39,13 +39,19 @@ class Bench {
 
 	macro function benchmark(_this : Expr, e : Expr) {
 		return macro {
-			var t1 = haxe.Timer.stamp();
+			var total = 0.0;
+			var f = function() ${e};
+			var g = function() {};
 			for (i in 0 ... n){
-				${e};
+				var t1 = haxe.Timer.stamp();
+				f();
+				var t2 = haxe.Timer.stamp();
+				g();
+				var t3 = haxe.Timer.stamp();
+				var dt = (t2 - t1) - (t3 - t2);
+				total += dt;
 			}
-			var t2 = haxe.Timer.stamp();
-			var dt = t2 - t1;
-			return dt / n;
+			return total / n;
 		};
 	}
 }
