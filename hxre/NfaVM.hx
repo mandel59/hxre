@@ -63,7 +63,7 @@ class NfaVM {
 		return matchedThread != None;
 	}
 
-	public function exec(w : Window) : Option<Array<Option<Range<Index<Char>>>>> {
+	inline public function exec(w : Window) : Option<Array<Option<Range<Index<Char>>>>> {
 		match(w);
 		return getMatch();
 	}
@@ -83,17 +83,17 @@ class NfaVM {
 		}
 	}
 
-	function clearTurnstiles() {
+	inline function clearTurnstiles() {
 		for (i in 0 ... turnstile.length) {
 			turnstile[i] = false;
 		}
 	}
 
-	function terminal() : Bool {
+	inline function terminal() : Bool {
 		return w.terminal();
 	}
 
-	function advance() : Void {
+	inline function advance() : Void {
 		w.advance();
 		cts = nts;
 		nts = [];
