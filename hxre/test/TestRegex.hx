@@ -17,6 +17,7 @@ class TestRegex extends haxe.unit.TestCase {
 
 	public function testEscape() {
 		assertTrue(new Regex("^\\\\\\.\\+\\*\\?\\(\\)\\|\\[\\]\\{\\}\\^\\$$").test("\\.+*?()|[]{}^$"));
+		assertTrue(new Regex("^\\x01\\x20\\x7f$").test("\x01 \x7f"));
 	}
 
 	public function testDigit() {
