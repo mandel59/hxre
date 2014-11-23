@@ -94,13 +94,50 @@ class Parser {
 		}
 	}
 
+	function parseHexadecimalDigits(n : Int) {
+		if (index > chars.length - n) {
+			throw new ParseError(index, "");
+		}
+		var x = 0;
+		for (i in 0 ... n) {
+			var y = chars[index++];
+			if ('0'.code <= y && y <= '9'.code) {
+				x = x * 16 + (y - '0'.code);
+			} else if ('A'.code <= y && y <= 'F'.code) {
+				x = x * 16 + (y - 'A'.code) + 0x0a;
+			} else if ('a'.code <= y && y <= 'f'.code) {
+				x = x * 16 + (y - 'a'.code) + 0x0a;
+			} else {
+				throw new ParseError(index, "");
+			}
+		}
+		return x;
+	}
+
 	function parseEscape() {
+		if (index == chars.length) {
+			throw new ParseError(index, "");
+		}
 		var c = chars[index++];
 		switch (c) {
 			case '\\'.code, '.'.code, '+'.code, '*'.code, '?'.code,
 				 '('.code, ')'.code, '|'.code, '['.code, ']'.code,
 				'{'.code, '}'.code, '^'.code, '$'.code:
 				return Literal(c);
+			case 'a'.code:
+				return Literal(0x07); // bell
+			case 'f'.code:
+				return Literal(0x0c); // form feed
+			case 't'.code:
+				return Literal('\t'.code); // horizontal tab
+			case 'n'.code:
+				return Literal('\n'.code); // new line
+			case 'r'.code:
+				return Literal('\r'.code); // carriage return
+			case 'v'.code:
+				return Literal(0x0b); // vertical tab
+			case 'x'.code:
+				return Literal(parseHexadecimalDigits(2));
 			case 'd'.code:
 				return AstClass([{begin: '0'.code, end: '9'.code + 1}], false);
 			case 'D'.code:
