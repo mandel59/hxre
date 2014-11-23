@@ -1,0 +1,49 @@
+-main hxre.bench.Main
+--interp
+
+--next
+
+-main hxre.bench.Main
+-neko bench/bench.n
+-cmd neko bench/bench.n
+
+--next
+
+-main hxre.bench.Main
+-php bench/bench_php
+-cmd php bench/bench_php/index.php
+
+--next
+
+-main hxre.bench.Main
+-js bench/bench.js
+-cmd node bench/bench.js
+
+--next
+
+-main hxre.bench.Main
+-swf bench/bench.swf
+
+--next
+
+-main hxre.bench.Main
+-java bench/bench_java
+-cmd java -jar bench/bench_java/Main.jar
+
+--next
+
+-main hxre.bench.Main
+-cpp bench/bench_cpp
+-cmd bench/bench_cpp/Main
+
+--next
+
+-main hxre.bench.Main
+-cs bench/bench_cs
+-cmd mono bench/bench_cs/bin/Main.exe
+
+--next
+
+-main hxre.bench.Main
+-python bench/bench.py
+-cmd python3 bench/bench.py
