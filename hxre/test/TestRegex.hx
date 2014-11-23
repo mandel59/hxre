@@ -15,6 +15,10 @@ class TestRegex extends haxe.unit.TestCase {
 		assertFalse(re.test("abcabcabc"));
 	}
 
+	public function testEscape() {
+		assertTrue(new Regex("^\\\\\\.\\+\\*\\?\\(\\)\\|\\[\\]\\{\\}\\^\\$$").test("\\.+*?()|[]{}^$"));
+	}
+
 	public function testDigit() {
 		assertTrue(new Regex("^\\d{10}$").test("0123456789"));
 		assertFalse(new Regex("\\D").test("0123456789"));
