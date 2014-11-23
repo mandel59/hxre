@@ -95,9 +95,12 @@ class Parser {
 	}
 
 	function parseEscape() {
-		switch (chars[index++]) {
-			case '\\'.code:
-				return Literal('\\'.code);
+		var c = chars[index++];
+		switch (c) {
+			case '\\'.code, '.'.code, '+'.code, '*'.code, '?'.code,
+				 '('.code, ')'.code, '|'.code, '['.code, ']'.code,
+				'{'.code, '}'.code, '^'.code, '$'.code:
+				return Literal(c);
 			case 'd'.code:
 				return AstClass([{begin: '0'.code, end: '9'.code + 1}], false);
 			case 'D'.code:
