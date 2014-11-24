@@ -6,7 +6,7 @@ This library is based on [libregex](http://doc.rust-lang.org/regex/index.html).
 
 Haxe's macro facility is used to provide compile-time specialization of the regex virtual machine.
 
-# Usage
+## Usage
 
 ```hx
 @:build(hxre.Specializer.build("(\\d{4})-(\\d{2})-(\\d{2})"))
@@ -27,3 +27,16 @@ class Main {
     }
 }
 ```
+
+## TODO
+
+- [ ] extended hexadecimal escape sequence `\x{10FFFF}`
+- [ ] character class `[abcABC0-9]`
+- [ ] ASCII character class `[:digit:]`
+- [ ] Perl character class `\d`
+- [ ] Unicode character class `\p{Han}`
+- [ ] case insensitive mode
+- [ ] multiline mode
+- [ ] global mode
+- [ ] named capture group
+- [ ] API refinement
