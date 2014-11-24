@@ -28,12 +28,19 @@ class Main {
 }
 ```
 
+## Implemented Features
+
+- [x] basic composites and repetitions `ab*|c+|d?|e{2,4}`
+- [x] ungreedy repetitions `<.+?>`
+- [x] numbered capture group `(abc)`
+- [x] non-capturing group `(?:abc)`
+
 ## TODO
 
 - [ ] extended hexadecimal escape sequence `\x{10FFFF}`
 - [ ] character class `[abcABC0-9]`
 - [ ] ASCII character class `[:digit:]`
-- [ ] Perl character class `\d`
+- [ ] Perl character class `\w`
 - [ ] Unicode character class `\p{Han}`
 - [ ] case insensitive mode
 - [ ] multiline mode
