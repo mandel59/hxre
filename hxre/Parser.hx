@@ -202,8 +202,28 @@ class Parser {
 		}
 	}
 
-	function parseCharClass() {
+	function parseNamedCharClass() {
+		throw "TODO: implement named char class";
+	}
+
+	function parseRanges() : Array<Range<Char>> {
 		throw "TODO: implement char class";
+	}
+
+	function parseCharClass() {
+		if (index == chars.length) {
+			throw new ParseError(index, "");
+		}
+		switch (chars[index++]) {
+			case ':'.code:
+				parseNamedCharClass();
+			case '^'.code:
+				var ranges = parseRanges();
+				cats.push(AstClass(ranges, true));
+			default:
+				var ranges = parseRanges();
+				cats.push(AstClass(ranges, false));
+		}
 	}
 
 	function parseParenExt() {
