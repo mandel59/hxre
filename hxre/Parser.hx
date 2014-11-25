@@ -94,24 +94,59 @@ class Parser {
 		}
 	}
 
-	function parseHexadecimalDigits(n : Int) {
-		if (index > chars.length - n) {
+	function parseHexadecimalDigit() {
+		var c = chars[index++];
+		if ('0'.code <= c && c <= '9'.code)
+			return (c - '0'.code);
+		else if ('A'.code <= c && c <= 'F'.code)
+			return (c - 'A'.code) + 0x0a;
+		else if ('a'.code <= c && c <= 'f'.code)
+			return (c - 'a'.code) + 0x0a;
+		else
 			throw new ParseError(index, "");
-		}
+	}
+
+	function parseHexadecimalDigits(n : Int) {
 		var x = 0;
 		for (i in 0 ... n) {
-			var y = chars[index++];
-			if ('0'.code <= y && y <= '9'.code) {
-				x = x * 16 + (y - '0'.code);
-			} else if ('A'.code <= y && y <= 'F'.code) {
-				x = x * 16 + (y - 'A'.code) + 0x0a;
-			} else if ('a'.code <= y && y <= 'f'.code) {
-				x = x * 16 + (y - 'a'.code) + 0x0a;
-			} else {
+			if (index == chars.length) {
 				throw new ParseError(index, "");
 			}
+
+			x = x * 16 + parseHexadecimalDigit();
 		}
 		return x;
+	}
+
+	function parseEmbracedHexadecimalDigits(maxlength : Int) {
+		var x = parseHexadecimalDigit();
+		var i = 1;
+		while (true) {
+			if (index == chars.length) {
+				throw new ParseError(index, "");
+			}
+
+			if (chars[index] == '}'.code) {
+				index++;
+				break;
+			}
+
+			if (i == maxlength) {
+				throw new ParseError(index, "");
+			}
+
+			x = x * 16 + parseHexadecimalDigit();
+			i++;
+		}
+		return x;
+	}
+
+	function parseEmbracedCodePoint() {
+		var u = parseEmbracedHexadecimalDigits(6);
+		if (u > 0x10ffff) {
+			throw new ParseError(index, "");
+		}
+		return u;
 	}
 
 	function parseEscape() {
@@ -137,7 +172,27 @@ class Parser {
 			case 'v'.code:
 				return Literal(0x0b); // vertical tab
 			case 'x'.code:
+				if (index == chars.length) {
+					throw new ParseError(index, "");
+				}
+
+				if (chars[index] == '{'.code) {
+					index++;
+					return Literal(parseEmbracedCodePoint());
+				}
+
 				return Literal(parseHexadecimalDigits(2));
+			case 'u'.code:
+				if (index == chars.length) {
+					throw new ParseError(index, "");
+				}
+
+				if (chars[index] == '{'.code) {
+					index++;
+					return Literal(parseEmbracedCodePoint());
+				}
+
+				return Literal(parseHexadecimalDigits(4));
 			case 'd'.code:
 				return AstClass([{begin: '0'.code, end: '9'.code + 1}], false);
 			case 'D'.code:
