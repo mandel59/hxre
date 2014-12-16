@@ -6,6 +6,8 @@ This library is based on [libregex](http://doc.rust-lang.org/regex/index.html).
 
 Haxe's macro facility is used to provide compile-time specialization of the regex virtual machine.
 
+**CAUTION**: This is an experimental implementation. DO NOT USE THIS FOR PRODUCTS.
+
 ## Usage
 
 ```hx
